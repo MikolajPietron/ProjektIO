@@ -1,5 +1,6 @@
 package org.example;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;  // FXMLLoader class for loading FXML files
 import javafx.scene.Parent;    // Import Parent class
 import javafx.scene.Scene;
@@ -11,41 +12,68 @@ import javafx.stage.Stage;
 
 public class KampusUczen {
 
+    @FXML private Label welcomeLabel;
+    @FXML private Button logoutButton;
+    private Stage stage;
+    public void setWelcomeText(String login) {
+        welcomeLabel.setText("Welcome " + login + "!");
+    }
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+
     public Scene createKampusScene(Stage stage, String login) {
-        // Create a label to display the welcome message
-        Label welcomeLabel = new Label("Welcome " + login + "!");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/kampus.fxml"));
+            Parent root = loader.load();
 
-        // Create a logout button
-        Button logoutButton = new Button("Wyloguj");
+            KampusUczen controller = loader.getController(); // Use the loaded controller
+            controller.setStage(stage);
+            controller.setWelcomeText(login);
 
-        // Set the logout button action to navigate back to the login screen
-        logoutButton.setOnAction(e -> {
-            // Load the login scene again using the primaryStage
+            stage.setFullScreen(true);
+            return new Scene(root, 300, 400);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    @FXML
+        private void handleLogout() {
+
             try {
-                // Reuse the Main class to get the login scene without creating a new instance
+
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
-                Parent root = loader.load();  // Load the FXML file into a Parent object
+                Parent root = loader.load();
 
-                // Retrieve the controller for the login screen
-                LoginController controller = loader.getController();
-                controller.setPrimaryStage(stage);
 
-                // Set the scene of the stage to the login screen
-                stage.setScene(new Scene(root, 600, 400)); // Adjust the scene size as needed
-                stage.setFullScreen(true); // You can also set the stage fullscreen based on requirements
+                LoginController logincontroller = loader.getController();
+                logincontroller.setPrimaryStage(stage);
+
+
+                stage.setScene(new Scene(root, 600, 400));
+                stage.setFullScreen(true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        });
+        }
+    @FXML
+    private void handleCourses(){
 
-        // Set up the layout for the Kampus screen
-        GridPane kampusLayout = new GridPane();
-        kampusLayout.setAlignment(Pos.CENTER);
-        kampusLayout.setVgap(10);
-        kampusLayout.add(welcomeLabel, 0, 0);
-        kampusLayout.add(logoutButton, 0, 1);
-
-        // Return the scene for the Kampus screen
-        return new Scene(kampusLayout, 400, 300);
     }
+    @FXML
+    private void handleHomework(){
+
+    }
+    @FXML
+    private void handleOgloszenia(){
+
+    }
+
+
+
+
 }
+
